@@ -3,6 +3,7 @@ from atproto import Client
 USERNAME = 'ND-Analysis.bsky.social'
 PASSWORD = 'Blueskyproject11'
 
+#we can modify search parameter to other disasters 
 SEARCH_QUERY = "tornado"
 
 def search_bluesky_posts():
@@ -10,6 +11,7 @@ def search_bluesky_posts():
     profile = client.login(USERNAME, PASSWORD)
     print('Logged in as: ', profile.display_name)
 
+	# search parameter: https://docs.bsky.app/docs/api/app-bsky-feed-search-posts
     response = client.app.bsky.feed.search_posts({'q': SEARCH_QUERY, 'lang': 'en'})
     
     if not response or not response.posts:
