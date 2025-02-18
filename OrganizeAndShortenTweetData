@@ -1,0 +1,66 @@
+import pandas as pd
+import random
+import re
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+
+# Step 1: Load the dataset (CSV file)
+file_path = r"C:\Users\sonal\Downloads\tweet_data_clean.csv"  # Update with actual file path
+df = pd.read_csv(file_path, encoding="utf-8")
+
+# Step 2: Check the total number of rows in the dataset
+print(f"Original dataset size: {len(df)} rows")
+
+# Ensure the dataset has more than 500 rows
+if len(df) < 500:
+    raise ValueError("The dataset has fewer than 500 rows. Cannot sample between 500 and 2000.")
+
+# Randomly select a number of tweets between 500 and 2000
+sample_size = random.randint(500, 2000)
+print(f"Sampling {sample_size} tweets...")
+
+# Step 3: Sample the dataset (randomly select 'sample_size' tweets)
+df_sampled = df.sample(n=sample_size, random_state=42)
+
+# Step 4: Preprocess tweets (cleaning text)
+def clean_tweet(text):
+    if isinstance(text, str):  # Ensure text is a string
+        text = re.sub(r"http\S+", "", text)  # Remove URLs
+        text = re.sub(r"@\w+", "", text)  # Remove mentions
+        text = re.sub(r"#\w+", "", text)  # Remove hashtags
+        text = re.sub(r"\d+", "", text)  # Remove numbers
+        text = re.sub(r"[^\w\s]", "", text)  # Remove special characters
+        text = text.lower().strip()  # Convert to lowercase and strip whitespace
+        return text
+    return ""
+
+df_sampled["clean_text"] = df_sampled["tweet_text"].astype(str).apply(clean_tweet)  # Replace 'tweet_column' with the actual column name containing tweets
+
+# Step 5: Convert text data into numerical format using TF-IDF
+vectorizer = TfidfVectorizer(max_features=1000)  # Keep only top 1000 words
+X = vectorizer.fit_transform(df_sampled["clean_text"])
+
+print(f"TF-IDF Matrix Shape: {X.shape}")  # (num_tweets, num_features)
+
+# Step 6: Reduce dimensions using PCA
+pca = PCA(n_components=50)  # Reduce to 50 features
+X_reduced = pca.fit_transform(X.toarray())
+
+print(f"PCA Reduced Shape: {X_reduced.shape}")  # (num_tweets, 50)
+
+# Step 7: Apply KMeans clustering
+num_clusters = 5  # Number of clusters (groups)
+kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+df_sampled["cluster"] = kmeans.fit_predict(X_reduced)
+
+# Step 8: Save the sampled dataset and processed data to CSV files
+df_sampled.to_csv("sampled_tweets.csv", index=False, encoding="utf-8")
+
+# Display the first few rows of the sampled data
+print(df_sampled.head())
+
+# Optional: Save the entire dataset if you want
+df_sampled.to_csv("processed_sampled_tweets.csv", index=False, encoding="utf-8")
+
+print("Sampling and processing complete! Data saved as 'sampled_tweets.csv' and 'processed_sampled_tweets.csv'.")
