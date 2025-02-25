@@ -1,0 +1,75 @@
+import pandas as pd
+import random
+import re
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+# Load the dataset
+file_path = r"C:\Users\sonal\Downloads\tweet_data_clean.csv"  # Update with actual path
+df = pd.read_csv(file_path, encoding="utf-8")
+
+#Print column names to debug
+print("Columns in dataset:", df.columns.tolist())
+
+# Remove whitespace and normalize column names
+df.columns = df.columns.str.strip().str.lower()
+
+# Drop "Unnamed: 0" column if it exists (it's an index column)
+if "unnamed: 0" in df.columns:
+    df.drop(columns=["unnamed: 0"], inplace=True)
+
+# Choose the classification label (change if needed)
+if "disaster" in df.columns:
+    df.rename(columns={"disaster": "label"}, inplace=True)
+elif "type_of_disaster" in df.columns:
+    df.rename(columns={"type_of_disaster": "label"}, inplace=True)
+else:
+    raise ValueError(f"No suitable classification column found! Found: {df.columns.tolist()}")
+
+# Ensure necessary columns exist
+if "tweet_text" not in df.columns or "label" not in df.columns:
+    raise ValueError(f"Required columns missing! Found: {df.columns.tolist()}")
+
+# Check and sample dataset size (500-2000 tweets)
+if len(df) < 500:
+    raise ValueError("Dataset has fewer than 500 rows, cannot proceed.")
+sample_size = random.randint(500, min(2000, len(df)))
+df_sampled = df.sample(n=sample_size, random_state=42)
+
+# Preprocess tweets (cleaning text)
+def clean_tweet(text):
+    text = re.sub(r"http\S+", "", text)  # Remove URLs
+    text = re.sub(r"@\w+", "", text)  # Remove mentions
+    text = re.sub(r"#\w+", "", text)  # Remove hashtags
+    text = re.sub(r"\d+", "", text)  # Remove numbers
+    text = re.sub(r"[^\w\s]", "", text)  # Remove special characters
+    return text.lower().strip()  # Convert to lowercase and strip whitespace
+
+df_sampled["clean_text"] = df_sampled["tweet_text"].astype(str).apply(clean_tweet)
+
+#  Convert text to numerical format using TF-IDF
+vectorizer = TfidfVectorizer(max_features=1000)
+X = vectorizer.fit_transform(df_sampled["clean_text"])
+
+# Reduce dimensions using PCA (optional, but helps speed up training)
+pca = PCA(n_components=50)
+X_reduced = pca.fit_transform(X.toarray())
+
+# Perform Classification using RandomForest
+X_train, X_test, y_train, y_test = train_test_split(X_reduced, df_sampled["label"], test_size=0.2, random_state=42)
+
+classifier = RandomForestClassifier(n_estimators=100, random_state=42)
+classifier.fit(X_train, y_train)
+y_pred = classifier.predict(X_test)
+
+#Evaluate classification performance
+print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+#  Save the processed dataset in processed_sampled_tweets.csv
+df_sampled.to_csv("processed_sampled_tweets.csv", index=False, encoding="utf-8")
+
+print("Processing complete! Data saved as 'processed_sampled_tweets.csv'.")
