@@ -48,10 +48,10 @@ def search_bluesky_posts(cursor, q):
     next_cursor = response.cursor if hasattr(response, 'cursor') else None
     return results, next_cursor
 
-downloaded_count = 0
-cursor = None
-
 for q in SEARCH_QUERIES:
+	downloaded_count = 0
+	cursor = None
+	
 	while downloaded_count < MAX_DOWNLOADS:
 		print(f'Searching posts for {q} at index {downloaded_count}')
 		posts, cursor = search_bluesky_posts(cursor, q)
