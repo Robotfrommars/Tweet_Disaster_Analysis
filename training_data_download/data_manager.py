@@ -1,7 +1,7 @@
 
 
 import pymongo
-from pymongo import MongoClient
+from pymongo import MongoClient, ReplaceOne
 from typing import List, Dict
 import ssl
 from models import BlueskyPost  
@@ -19,4 +19,12 @@ class DataManager:
         return [BlueskyPost(**document) for document in self.bluesky_posts.find()]
 
     def add_bluesky_post(self, post: BlueskyPost):
-        self.bluesky_posts.insert_one(post.dict())
+        self.bluesky_posts.replace_one({"post_id": post.post_id}, post.dict(), upsert=True)
+
+    def add_bluesky_posts(self, posts: List[BlueskyPost]):
+        operations = [
+            ReplaceOne({"post_id": post.post_id}, post.dict(), upsert=True)
+            for post in posts
+        ]
+        if operations:
+            self.bluesky_posts.bulk_write(operations)
