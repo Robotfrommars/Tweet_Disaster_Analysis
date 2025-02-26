@@ -8,23 +8,23 @@
     <h1>Welcome to Natural Disaster Warnings With Bluesky</h1>
     
 
-    <br><h1>Tornado</h1><br>
-    <button id="tornadoButton">Click Me To See Tornado Tweets!</button>
+    <br><h1>Tornados</h1>
+    <button id="tornadoButton">Click Me To See Tornado Tweets</button>
     <div id="tornado-tweets-container" style="display: none">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
               <% if (tweet.query == "tornado"){ %>
               <div class="tweet">
-                  <strong>@<%= tweet.query %></strong><br>
+                  <strong><%= tweet.query %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
               </div>
-              <%}%>
-          <% }); %>
+              <%} }); %>
       <% } else { %>
           <p>No tweets available.</p>
       <% } %>
   </div>
+  
   <script>
     document.getElementById("tornadoButton").addEventListener("click", function() {
       let container = document.getElementById("tornado-tweets-container");
@@ -32,14 +32,14 @@
     });
   </script>
 
-    <br><h1>Hurricane</h1><br>
-    <button id="hurricaneButton">Click Me To See Hurricane Tweets!</button>
+    <br><h1>Hurricanes</h1>
+    <button id="hurricaneButton">Click Me To See Hurricane Tweets</button>
     <div id="hurricane-tweets-container" style="display: none">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
               <% if (tweet.query == "hurricane"){ %>
               <div class="tweet">
-                  <strong>@<%= tweet.query %></strong><br>
+                  <strong><%= tweet.query %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
               </div>
@@ -55,25 +55,38 @@
       container.style.display = container.style.display === "none" ? "block" : "none";
     });
   </script>
-  </body>
-</html><!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1>Welcome to Natural Disaster Warnings With Bluesky</h1>
-    
+  <br><h1>Earthquakes</h1>
+  <button id="earthquakeButton">Click Me To See Earthquake Tweets</button>
+  <div id="earthquake-tweets-container" style="display: none">
+    <% if (tweets.length > 0) { %>
+        <% tweets.forEach(tweet => { %>
+            <% if (tweet.query == "earthquake"){ %>
+            <div class="tweet">
+                <strong><%= tweet.query %></strong><br>
+                <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+            </div>
+            <%}%>
+        <% }); %>
+    <% } else { %>
+        <p>No tweets available.</p>
+    <% } %>
+</div>
+<script>
+  document.getElementById("earthquakeButton").addEventListener("click", function() {
+    let container = document.getElementById("earthquake-tweets-container");
+    container.style.display = container.style.display === "none" ? "block" : "none";
+  });
+</script>
 
-    <br><h1>Tornado</h1><br>
-    <button id="tornadoButton">Click Me To See Tornado Tweets!</button>
-    <div id="tornado-tweets-container" style="display: none">
+<br><h1>Floods</h1>
+    <button id="floodButton">Click Me To See Flood Tweets</button>
+    <div id="flood-tweets-container" style="display: none">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
-              <% if (tweet.query == "tornado"){ %>
+              <% if (tweet.query == "flood"){ %>
               <div class="tweet">
-                  <strong>@<%= tweet.query %></strong><br>
+                  <strong><%= tweet.query %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
               </div>
@@ -84,32 +97,8 @@
       <% } %>
   </div>
   <script>
-    document.getElementById("tornadoButton").addEventListener("click", function() {
-      let container = document.getElementById("tornado-tweets-container");
-      container.style.display = container.style.display === "none" ? "block" : "none";
-    });
-  </script>
-
-    <br><h1>Hurricane</h1><br>
-    <button id="hurricaneButton">Click Me To See Hurricane Tweets!</button>
-    <div id="hurricane-tweets-container" style="display: none">
-      <% if (tweets.length > 0) { %>
-          <% tweets.forEach(tweet => { %>
-              <% if (tweet.query == "hurricane"){ %>
-              <div class="tweet">
-                  <strong>@<%= tweet.query %></strong><br>
-                  <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
-                  <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
-              </div>
-              <%}%>
-          <% }); %>
-      <% } else { %>
-          <p>No tweets available.</p>
-      <% } %>
-  </div>
-  <script>
-    document.getElementById("hurricaneButton").addEventListener("click", function() {
-      let container = document.getElementById("hurricane-tweets-container");
+    document.getElementById("floodButton").addEventListener("click", function() {
+      let container = document.getElementById("flood-tweets-container");
       container.style.display = container.style.display === "none" ? "block" : "none";
     });
   </script>
