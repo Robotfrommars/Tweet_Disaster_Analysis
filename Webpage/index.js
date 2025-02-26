@@ -22,7 +22,7 @@ const Tweet = mongoose.model("Tweet", tweetSchema);
 // GET home page & Fetch Tweets
 router.get('/', async function(req, res, next) {
   try {
-    const tweets = await Tweet.find({query: { $in: ["tornado", "hurricane"] } }).sort({ timestamp: -1 }).limit(100);
+    const tweets = await Tweet.find({query: { $in: ["tornado", "hurricane","earthquake","flood"] } }).sort({ timestamp: -1 }).limit(200);
     res.render('index', { title: 'Bluesky Tweets', tweets });
     
   } catch (error) {
