@@ -4,12 +4,12 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
-  <body>
-    <h1>Welcome to Natural Disaster Warnings With Bluesky</h1>
+  
+  <body style="background-color:rgb(209, 212, 248);" >
+    <h1 style="text-align: center;">Welcome to Natural Disaster Warnings With Bluesky</h1>
     
-
-    <br><h1>Tornados</h1>
-    <button id="tornadoButton">Click Me To See Tornado Tweets</button>
+  <div id="border" style="border: thin solid black ; background-color:rgb(145, 148, 177); cursor:pointer" onclick="toggleDisplay('tornado-tweets-container')">
+    <h1 style="text-align: center;" >Tornados</h1>
     <div id="tornado-tweets-container" style="display: none">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
@@ -24,16 +24,9 @@
           <p>No tweets available.</p>
       <% } %>
   </div>
-  
-  <script>
-    document.getElementById("tornadoButton").addEventListener("click", function() {
-      let container = document.getElementById("tornado-tweets-container");
-      container.style.display = container.style.display === "none" ? "block" : "none";
-    });
-  </script>
-
-    <br><h1>Hurricanes</h1>
-    <button id="hurricaneButton">Click Me To See Hurricane Tweets</button>
+</div>
+<div id="border" style="border: thin solid black ; background-color:rgb(151, 158, 218);cursor:pointer" onclick="toggleDisplay('hurricane-tweets-container')">
+    <h1 style="text-align: center; " >Hurricanes</h1>
     <div id="hurricane-tweets-container" style="display: none">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
@@ -49,14 +42,11 @@
           <p>No tweets available.</p>
       <% } %>
   </div>
-  <script>
-    document.getElementById("hurricaneButton").addEventListener("click", function() {
-      let container = document.getElementById("hurricane-tweets-container");
-      container.style.display = container.style.display === "none" ? "block" : "none";
-    });
-  </script>
-  <br><h1>Earthquakes</h1>
-  <button id="earthquakeButton">Click Me To See Earthquake Tweets</button>
+</div>
+
+
+<div id="border" style="border: thin solid black ; background-color:rgb(129, 119, 119);cursor:pointer"  onclick="toggleDisplay('earthquake-tweets-container')">
+  <h1 style="text-align: center; ">Earthquakes</h1>
   <div id="earthquake-tweets-container" style="display: none">
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
@@ -71,16 +61,12 @@
     <% } else { %>
         <p>No tweets available.</p>
     <% } %>
+ </div>
 </div>
-<script>
-  document.getElementById("earthquakeButton").addEventListener("click", function() {
-    let container = document.getElementById("earthquake-tweets-container");
-    container.style.display = container.style.display === "none" ? "block" : "none";
-  });
-</script>
 
-<br><h1>Floods</h1>
-    <button id="floodButton">Click Me To See Flood Tweets</button>
+
+<div id="border" style="border: thin solid black ; background-color:rgb(120, 133, 248); cursor:pointer" onclick="toggleDisplay('flood-tweets-container')">
+    <h1 style="text-align: center ;" >Floods</h1>
     <div id="flood-tweets-container" style="display: none">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
@@ -96,11 +82,50 @@
           <p>No tweets available.</p>
       <% } %>
   </div>
-  <script>
-    document.getElementById("floodButton").addEventListener("click", function() {
-      let container = document.getElementById("flood-tweets-container");
-      container.style.display = container.style.display === "none" ? "block" : "none";
-    });
-  </script>
+</div>
+
+<div id="border" style="border: thin solid black ; background-color:rgb(226, 178, 87); cursor:pointer" onclick="toggleDisplay('wildfire-tweets-container')">
+  <h1 style="text-align: center ;" >WildFires</h1>
+  <div id="wildfire-tweets-container" style="display: none">
+    <% if (tweets.length > 0) { %>
+        <% tweets.forEach(tweet => { %>
+            <% if (tweet.query == "wildfire"){ %>
+            <div class="tweet">
+                <strong><%= tweet.query %></strong><br>
+                <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+            </div>
+            <%}%>
+        <% }); %>
+    <% } else { %>
+        <p>No tweets available.</p>
+    <% } %>
+</div>
+</div>
+
+<div id="border" style="border: thin solid black ; background-color:rgb(156, 205, 228); cursor:pointer" onclick="toggleDisplay('blizzard-tweets-container')">
+  <h1 style="text-align: center ;" >Blizzard</h1>
+  <div id="blizzard-tweets-container" style="display: none">
+    <% if (tweets.length > 0) { %>
+        <% tweets.forEach(tweet => { %>
+            <% if (tweet.query == "blizzard"){ %>
+            <div class="tweet">
+                <strong><%= tweet.query %></strong><br>
+                <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+            </div>
+            <%}%>
+        <% }); %>
+    <% } else { %>
+        <p>No tweets available.</p>
+    <% } %>
+</div>
+</div>
   </body>
+  <script>
+    function toggleDisplay(type) {
+      let container = document.getElementById(type);
+      container.style.display = container.style.display === "none" ? "block" : "none";
+    }
+  </script>
 </html>
