@@ -2,15 +2,24 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href= '/stylesheets/style.css' />
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
   </head>
   
   <body style="background-color:rgb(209, 212, 248);" >
+
     <h1 style="text-align: center;">Welcome to Natural Disaster Warnings With Bluesky</h1>
-    
+    <div id="map" style="border: thin solid black ;"> </div><br>
+    <h1 style="text-align: center;">Can't find what you are looking for, just look below!</h1><br>
   <div id="border" style="border: thin solid black ; background-color:rgb(145, 148, 177); cursor:pointer" onclick="toggleDisplay('tornado-tweets-container')">
-    <h1 style="text-align: center;" >Tornados</h1>
-    <div id="tornado-tweets-container" style="display: none">
+    <h1 style="text-align: center;user-select: none;" >Tornados</h1>
+    <div id="tornado-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('tornado-tweets-container')">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
               <% if (tweet.query == "tornado"){ %>
@@ -26,8 +35,8 @@
   </div>
 </div>
 <div id="border" style="border: thin solid black ; background-color:rgb(151, 158, 218);cursor:pointer" onclick="toggleDisplay('hurricane-tweets-container')">
-    <h1 style="text-align: center; " >Hurricanes</h1>
-    <div id="hurricane-tweets-container" style="display: none">
+    <h1 style="text-align: center; user-select: none;" >Hurricanes</h1>
+    <div id="hurricane-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('hurricane-tweets-container')">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
               <% if (tweet.query == "hurricane"){ %>
@@ -46,8 +55,8 @@
 
 
 <div id="border" style="border: thin solid black ; background-color:rgb(129, 119, 119);cursor:pointer"  onclick="toggleDisplay('earthquake-tweets-container')">
-  <h1 style="text-align: center; ">Earthquakes</h1>
-  <div id="earthquake-tweets-container" style="display: none">
+  <h1 style="text-align: center;user-select: none; ">Earthquakes</h1>
+  <div id="earthquake-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('earthquake-tweets-container')">
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
             <% if (tweet.query == "earthquake"){ %>
@@ -66,8 +75,8 @@
 
 
 <div id="border" style="border: thin solid black ; background-color:rgb(120, 133, 248); cursor:pointer" onclick="toggleDisplay('flood-tweets-container')">
-    <h1 style="text-align: center ;" >Floods</h1>
-    <div id="flood-tweets-container" style="display: none">
+    <h1 style="text-align: center ;user-select: none;" >Floods</h1>
+    <div id="flood-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('flood-tweets-container')">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
               <% if (tweet.query == "flood"){ %>
@@ -85,8 +94,8 @@
 </div>
 
 <div id="border" style="border: thin solid black ; background-color:rgb(226, 178, 87); cursor:pointer" onclick="toggleDisplay('wildfire-tweets-container')">
-  <h1 style="text-align: center ;" >WildFires</h1>
-  <div id="wildfire-tweets-container" style="display: none">
+  <h1 style="text-align: center ; user-select: none;" >Wildfires</h1>
+  <div id="wildfire-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('wildfire-tweets-container')">
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
             <% if (tweet.query == "wildfire"){ %>
@@ -104,8 +113,8 @@
 </div>
 
 <div id="border" style="border: thin solid black ; background-color:rgb(156, 205, 228); cursor:pointer" onclick="toggleDisplay('blizzard-tweets-container')">
-  <h1 style="text-align: center ;" >Blizzard</h1>
-  <div id="blizzard-tweets-container" style="display: none">
+  <h1 style="text-align: center ;user-select: none;" >Blizzard</h1>
+  <div id="blizzard-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('blizzard-tweets-container')">
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
             <% if (tweet.query == "blizzard"){ %>
@@ -121,9 +130,52 @@
     <% } %>
 </div>
 </div>
+<div id="border" style="border: thin solid black ; background-color:rgb(229, 230, 183); cursor:pointer" onclick="toggleDisplay('haze-tweets-container')">
+  <h1 style="text-align: center ;user-select: none;" >Haze</h1>
+  <div id="haze-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('haze-tweets-container')"> 
+    <% if (tweets.length > 0) { %>
+        <% tweets.forEach(tweet => { %>
+            <% if (tweet.query == "haze"){ %>
+            <div class="tweet">
+                <strong><%= tweet.query %></strong><br>
+                <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+            </div>
+            <%}%>
+        <% }); %>
+    <% } else { %>
+        <p>No tweets available.</p>
+    <% } %>
+</div>
+</div>
+<div id="border" style="border: thin solid black ; background-color:rgb(221, 190, 241); cursor:pointer" onclick="toggleDisplay('meteor-tweets-container')">
+  <h1 style="text-align: center ;user-select: none;" >Meteor</h1>
+  <div id="meteor-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('meteor-tweets-container')">
+    <% if (tweets.length > 0) { %>
+        <% tweets.forEach(tweet => { %>
+            <% if (tweet.query == "meteor"){ %>
+            <div class="tweet">
+                <strong><%= tweet.query %></strong><br>
+                <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
+                <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+            </div>
+            <%}%>
+        <% }); %>
+    <% } else { %>
+        <p>No tweets available.</p>
+    <% } %>
+</div>
+</div>
   </body>
+
   <script>
-    function toggleDisplay(type) {
+   var map = L.map('map').setView([38.7946, -106.5348], 4);
+   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+   maxZoom: 19,
+   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+  
+  function toggleDisplay(type) {
       let container = document.getElementById(type);
       container.style.display = container.style.display === "none" ? "block" : "none";
     }
