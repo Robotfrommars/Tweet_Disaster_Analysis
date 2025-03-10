@@ -1,8 +1,12 @@
 from atproto import Client
 from pymongo import MongoClient
+import pandas as pd
 import time
 from datetime import datetime, timedelta, timezone
 import os
+import re
+import emoji
+
 
 MONGO_URI = "mongodb+srv://armonhadjimani:ND_analysis@cluster0.dqx5o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
@@ -17,8 +21,33 @@ except Exception as e:
 
 USERNAME = "ND-Analysis.bsky.social"
 PASSWORD = "Blueskyproject11"
-SEARCH_TERMS = ["tornado", "hurricane", "earthquake", "flood"]
+SEARCH_TERMS = ["tornado", "hurricane", "earthquake", "flood", "wildfire", "blizzard", "haze", "meteor"]
 
+def load_cities(filename="worldcities.csv"):
+    try:
+        df = pd.read_csv(filename, usecols=["city"])
+        return set(df["city"].str.lower())
+    except Exception as e:
+        print(f"Error loading city data: {e}")
+        return set()
+
+KNOWN_CITIES = load_cities()
+
+def extract_location(text):
+    words = text.lower().split()
+
+    for i in range(len(words)):
+        for j in range(i + 1, min(i + 3, len(words) + 1)):
+            phrase = " ".join(words[i:j])
+            if phrase in KNOWN_CITIES:
+                return phrase.title()
+
+    return None
+
+def clean_text(text):
+    text = re.sub(r'[^\w\s]', '', text)
+    text = emoji.replace_emoji(text, replace='')
+    return text.strip()
 
 def is_duplicate(tweet_data):
     return collection.find_one({"user": tweet_data["user"], "text": tweet_data["text"]}) is not None
@@ -35,15 +64,20 @@ def fetch_bluesky_posts(client):
 
             all_posts = []
             for term in SEARCH_TERMS:
-                response = client.app.bsky.feed.search_posts({'q': term, 'lang': 'en'})
+                response = client.app.bsky.feed.search_posts({'q': term, 'lang': 'en', 'limit': 20})
                 if response and response.posts:
                     for post in response.posts:
+                        cleaned_text = clean_text(post.record.text)
+                        detected_location = extract_location(cleaned_text)
+
                         tweet_data = {
                             "user": post.author.handle,
-                            "text": post.record.text,
+                            "text": cleaned_text,
                             "query": term,
-                            "timestamp": datetime.fromisoformat(post.record.created_at.replace("Z", "+00:00")) - timedelta(hours=6) #temporarily hardcoding time to central
+                            "timestamp": datetime.fromisoformat(post.record.created_at.replace("Z", "+00:00")) - timedelta(hours=6),
+                            "location": detected_location
                         }
+
                         if not is_duplicate(tweet_data):
                             all_posts.append(tweet_data)
 
@@ -65,6 +99,7 @@ def fetch_bluesky_posts(client):
 
         print("Waiting for 5 minutes before the next scan")
         time.sleep(300)
+
 
 
 try:
