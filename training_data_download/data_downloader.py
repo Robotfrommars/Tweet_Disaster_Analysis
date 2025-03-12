@@ -2,6 +2,8 @@ from atproto import Client
 from data_manager import DataManager
 from models import BlueskyPost
 
+import add_locations as locations
+
 USERNAME = 'ND-Analysis.bsky.social'
 PASSWORD = 'Blueskyproject11'
 
@@ -14,10 +16,14 @@ END_DATE = '2025-02-25T00:00:00Z'
 
 MAX_DOWNLOADS = 250
 
+print('Logging in to bluesky API...')
+
 client = Client()
 profile = client.login(USERNAME, PASSWORD)
 
 data_manager = DataManager()
+
+#locations.update_post_locations(data_manager)
 
 def search_bluesky_posts(cursor, q):
 	# search parameter: https://docs.bsky.app/docs/api/app-bsky-feed-search-posts
