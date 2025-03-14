@@ -179,7 +179,10 @@
         style: L.maptiler.MapStyle.STREETS, // optional
         language: L.maptiler.Language.ENGLISH, //change the default language
       }).addTo(map);
- 
+      var marker = L.marker([32.7767, -96.7970]).addTo(map);
+      marker.bindPopup("<strong>Tornado</strong><br>A tornado has been sighted in this area.").openPopup();
+      var marker = L.marker([35.7767, -96.7970]).addTo(map);
+      marker.bindPopup("<strong>Hurricane</strong><br>A hurricane has been sighted in this area.").openPopup();
   function toggleDisplay(type) {
       let container = document.getElementById(type);
       container.style.display = container.style.display === "none" ? "block" : "none";
