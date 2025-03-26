@@ -6,7 +6,7 @@ from data_manager import DataManager
 def main():
     print("Starting tweet analysis pipeline...")
     data_manager = DataManager()
-    fetcher = BlueskyFetcher()
+    fetcher = BlueskyFetcher(data_manager)
 
     print("Fetching and storing new Bluesky posts...")
     fetcher.fetch_posts()

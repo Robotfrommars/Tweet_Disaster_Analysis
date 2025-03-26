@@ -4,9 +4,10 @@ import time
 import config
 import re
 import emoji
+from models import BlueskyPost
 
 SEARCH_TERMS = ["tornado", "hurricane", "earthquake", "flood", "wildfire", "blizzard", "haze", "meteor"]
-MAX_DOWNLOADS = 100
+MAX_DOWNLOADS = 10
 
 def clean_text(text):
     text = re.sub(r'[^\w\s]', '', text)
@@ -14,11 +15,11 @@ def clean_text(text):
     return text.strip()
 
 class BlueskyFetcher:
-    def __init__(self):
-        print("Logging into Bluesky API...")
+    def __init__(self, data_manager: DataManager):
+        print("Logging into Bluesky API")
         self.client = Client()
         self.login()
-        self.data_manager = DataManager()
+        self.data_manager = data_manager
 
     def login(self):
         try:
@@ -33,7 +34,7 @@ class BlueskyFetcher:
             response = self.client.app.bsky.feed.search_posts({
                 'q': query,
                 'lang': 'en',
-                'limit': 100,
+                'limit': 10, #
                 'cursor': cursor
             })
 
@@ -47,13 +48,16 @@ class BlueskyFetcher:
             for post in response.posts:
                 cleaned_text = clean_text(post.record.text)
 
-                formatted_post = {
-                    "user": post.author.handle,
-                    "text": cleaned_text,
-                    "query": query,
-                    "timestamp": post.record.created_at,
-                    "location": []
-                }
+                formatted_post = BlueskyPost(
+                    user=post.author.handle,
+                    text=cleaned_text,
+                    query=query,
+                    timestamp=post.record.created_at,
+                    location=[],
+                    latitude=None,
+                    longitude=None
+                )
+
                 if not self.data_manager.is_duplicate(formatted_post):
                     results.append(formatted_post)
 
@@ -65,30 +69,23 @@ class BlueskyFetcher:
             return [], None
 
     def fetch_posts(self):
-        while True:
-            self.data_manager.delete_old_posts()
+        self.data_manager.delete_old_posts()
 
-            for query in SEARCH_TERMS:
-                downloaded_count = 0
-                cursor = None
+        for query in SEARCH_TERMS:
+            downloaded_count = 0
+            cursor = None
 
-                while downloaded_count < MAX_DOWNLOADS:
-                    print(f"Searching posts for {query} at index {downloaded_count}")
-                    posts, cursor = self.search_bluesky_posts(cursor, query)
+            while downloaded_count < MAX_DOWNLOADS:
+                print(f"Searching posts for {query} at index {downloaded_count}")
+                posts, cursor = self.search_bluesky_posts(cursor, query)
 
-                    if not posts:
-                        break
+                if not posts:
+                    break
 
-                    self.data_manager.add_bluesky_posts(posts)
-                    downloaded_count += len(posts)
+                self.data_manager.add_bluesky_posts(posts)
+                downloaded_count += len(posts)
 
-                    if downloaded_count >= MAX_DOWNLOADS or not cursor:
-                        break
-
-            print("Waiting for 5 minutes before the next fetch cycle...")
-            time.sleep(300)
+                if downloaded_count >= MAX_DOWNLOADS or not cursor:
+                    break
 
 
-if __name__ == "__main__":
-    fetcher = BlueskyFetcher()
-    fetcher.fetch_posts()

@@ -2,11 +2,12 @@ from pymongo import MongoClient, ReplaceOne
 from typing import List
 from datetime import datetime, timedelta, timezone
 import config
+from models import BlueskyPost
 
 
 class DataManager:
     def __init__(self):
-        print("Connecting to MongoDB Atlas...")
+        print("Connecting to MongoDB Atlas")
         try:
             self.client = MongoClient(
                 config.MONGO_URI,
@@ -20,22 +21,22 @@ class DataManager:
             print(f"MongoDB Connection Error: {e}")
             exit()
 
-    def get_all_posts(self):
-        return list(self.collection.find())  # Returns raw MongoDB documents
+    def get_all_posts(self) -> List[BlueskyPost]:
+        return [BlueskyPost(**doc) for doc in self.collection.find()]
 
-    def add_bluesky_posts(self, posts: List[dict]):
+    def add_bluesky_posts(self, posts: List[BlueskyPost]):
         if not posts:
             return
 
         operations = [
-            ReplaceOne({"user": post["user"], "text": post["text"]}, post, upsert=True)
+            ReplaceOne({"user": post.user, "text": post.text}, post.dict(), upsert=True)
             for post in posts
         ]
         result = self.collection.bulk_write(operations)
         print(f"Inserted/Updated {result.upserted_count} posts.")
 
-    def is_duplicate(self, post: dict) -> bool:
-        return self.collection.find_one({"user": post["user"], "text": post["text"]}) is not None
+    def is_duplicate(self, post: BlueskyPost) -> bool:
+        return self.collection.find_one({"user": post.user, "text": post.text}) is not None
 
     def delete_old_posts(self):
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=5)
