@@ -2,3 +2,4 @@ atproto
 pymongo
 pydantic
 spacy
+openai
