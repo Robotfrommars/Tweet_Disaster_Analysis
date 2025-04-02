@@ -6,6 +6,7 @@
      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
+  
      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
@@ -19,6 +20,8 @@
 
     <h1 style="text-align: center;">Welcome to Natural Disaster Warnings With Bluesky</h1>
     <div id="map" style="border: thin solid black ;"> </div><br>
+   
+    
     <h1 style="text-align: center;">Can't find what you are looking for, just look below!</h1><br>
   <div id="border" style="border: thin solid black ; background-color:rgb(145, 148, 177); cursor:pointer" onclick="toggleDisplay('tornado-tweets-container')">
     <h1 style="text-align: center;user-select: none;" >Tornados</h1>
@@ -30,11 +33,25 @@
                   <strong><%= tweet.query %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+                  <% if (tweet.latitude != null){ %>
+                    <br><small>Latitude: <%= tweet.latitude %></small>
+                    <br><small>Longitude: <%= tweet.longitude  %></small>
+                    <br>
+                    <%var temp=tweet.text%>
+                    <%temp=temp.replace(/[^a-zA-Z0-9\s]/g, '')%>
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                      Add Marker
+                    </button>
+                   
+                  <%}%>
               </div>
               <%} }); %>
       <% } else { %>
           <p>No tweets available.</p>
       <% } %>
+      <script>
+       
+      </script>
   </div>
 </div>
 <div id="border" style="border: thin solid black ; background-color:rgb(151, 158, 218);cursor:pointer" onclick="toggleDisplay('hurricane-tweets-container')">
@@ -47,6 +64,15 @@
                   <strong><%= tweet.query %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+                  <% if (tweet.latitude != null){ %>
+                    <br><small>Latitude: <%= tweet.latitude %></small>
+                    <br><small>Longitude: <%= tweet.longitude  %></small>
+                    <%var temp=tweet.text%>
+                    <%temp=temp.replace(/[^a-zA-Z0-9\s]/g, '')%>
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                      Add Marker
+                    </button>
+                  <%}%>
               </div>
               <%}%>
           <% }); %>
@@ -67,6 +93,13 @@
                 <strong><%= tweet.query %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+                <% if (tweet.latitude != null){ %>
+                    <br><small>Latitude: <%= tweet.latitude %></small>
+                    <br><small>Longitude: <%= tweet.longitude  %></small><br>
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                      Add Marker
+                    </button>
+                  <%}%>
             </div>
             <%}%>
         <% }); %>
@@ -87,6 +120,13 @@
                   <strong><%= tweet.query %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+                  <% if (tweet.latitude != null){ %>
+                    <br><small>Latitude: <%= tweet.latitude %></small>
+                    <br><small>Longitude: <%= tweet.longitude  %></small><br>
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                      Add Marker
+                    </button>
+                  <%}%>
               </div>
               <%}%>
           <% }); %>
@@ -106,6 +146,13 @@
                 <strong><%= tweet.query %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+                <% if (tweet.latitude != null){ %>
+                    <br><small>Latitude: <%= tweet.latitude %></small>
+                    <br><small>Longitude: <%= tweet.longitude  %></small>
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                      Add Marker
+                    </button>
+                  <%}%>
             </div>
             <%}%>
         <% }); %>
@@ -125,6 +172,13 @@
                 <strong><%= tweet.query %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+                <% if (tweet.latitude != null){ %>
+                    <br><small>Latitude: <%= tweet.latitude %></small>
+                    <br><small>Longitude: <%= tweet.longitude  %></small><br>
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                      Add Marker
+                    </button>
+                  <%}%>
             </div>
             <%}%>
         <% }); %>
@@ -143,6 +197,13 @@
                 <strong><%= tweet.query %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+                <% if (tweet.latitude != null){ %>
+                    <br><small>Latitude: <%= tweet.latitude %></small>
+                    <br><small>Longitude: <%= tweet.longitude  %></small><br>
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                      Add Marker
+                    </button>
+                  <%}%>
             </div>
             <%}%>
         <% }); %>
@@ -161,6 +222,14 @@
                 <strong><%= tweet.query %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
+                <% if (tweet.latitude != null){ %>
+                    <br><small>Latitude: <%= tweet.latitude %></small>
+                    <br><small>Longitude: <%= tweet.longitude  %></small><br>
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                      Add Marker
+                    </button>
+                    
+                  <%}%>
             </div>
             <%}%>
         <% }); %>
@@ -172,20 +241,39 @@
   </body>
 
   <script>
-    const key = 'SyFTPxMVt6sFgMEkA2jZ';
-   var map = L.map('map').setView([38.7946, -106.5348], 4);
-   const mtLayer = L.maptiler.maptilerLayer({
+      var L;
+      
+      const key = 'SyFTPxMVt6sFgMEkA2jZ';
+      var map = L.map('map').setView([38.7946, -106.5348], 4);
+      const mtLayer = L.maptiler.maptilerLayer({
         apiKey: key,
         style: L.maptiler.MapStyle.STREETS, // optional
         language: L.maptiler.Language.ENGLISH, //change the default language
       }).addTo(map);
-      var marker = L.marker([32.7767, -96.7970]).addTo(map);
-      marker.bindPopup("<strong>Tornado</strong><br>A tornado has been sighted in this area.").openPopup();
-      var marker = L.marker([35.7767, -96.7970]).addTo(map);
-      marker.bindPopup("<strong>Hurricane</strong><br>A hurricane has been sighted in this area.").openPopup();
+
+      
+      window.addToMap= function(lat,long,type,msg)
+      {
+        
+        var marker = L.marker([lat, long]).addTo(map);
+         msg=escapeTweetText(msg);
+        marker.bindPopup(`<strong>${type}</strong><br>${msg}`);
+
+      }
   function toggleDisplay(type) {
       let container = document.getElementById(type);
       container.style.display = container.style.display === "none" ? "block" : "none";
     }
+    function escapeTweetText(text) {
+    return text.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+  }
+
+         document.addEventListener("DOMContentLoaded", function () {
+      if (window.tweetMarkers && Array.isArray(window.tweetMarkers)) {
+          window.tweetMarkers.forEach(marker => {
+              addToMap(marker.lat, marker.long, marker.type, marker.msg);
+          });
+      }
+  });
   </script>
 </html>
