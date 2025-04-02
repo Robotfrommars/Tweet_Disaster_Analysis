@@ -14,7 +14,10 @@ const tweetSchema = new mongoose.Schema({
   user: String,
   text: String,
   query: String,
-  timestamp: String
+  timestamp: String,
+  latitude: Number,
+  longitude: Number,
+  disaster_type: String
 });
 
 const Tweet = mongoose.model("Tweet", tweetSchema);
@@ -22,7 +25,7 @@ const Tweet = mongoose.model("Tweet", tweetSchema);
 // GET home page & Fetch Tweets
 router.get('/', async function(req, res, next) {
   try {
-    const tweets = await Tweet.find({query: { $in: ["tornado", "hurricane","earthquake","flood","wildfire","blizzard","haze","meteor"] } }).sort({ timestamp: -1 }).limit(500);
+    const tweets = await Tweet.find({disaster_type: { $in: ["tornado", "hurricane","earthquake","flood","wildfire","blizzard","haze","meteor"] } }).sort({ timestamp: -1 }).limit(500);
     res.render('index', { title: 'Bluesky Tweets', tweets });
     
   } catch (error) {
