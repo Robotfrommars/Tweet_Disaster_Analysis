@@ -8,10 +8,10 @@ def main():
     data_manager = DataManager()
     fetcher = BlueskyFetcher(data_manager)
 
-    #print("Fetching and storing new Bluesky posts")
+    print("Fetching and storing new Bluesky posts")
     fetcher.fetch_posts()
 
-    #print("Updating posts with location information")
+    print("Updating posts with location information")
     update_post_locations(data_manager)
     
     print("Updating posts with predicted disaster type")
