@@ -9,3 +9,4 @@ class BlueskyPost(BaseModel):
     location: List[str] = []
     latitude: Optional[float] = None
     longitude: Optional[float] = None
+    disaster_type: str = ""
