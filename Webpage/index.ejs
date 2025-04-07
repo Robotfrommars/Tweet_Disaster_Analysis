@@ -20,7 +20,7 @@
 
     <h1 style="text-align: center;">Welcome to Natural Disaster Warnings With Bluesky</h1>
     <div id="map" style="border: thin solid black ;"> </div><br>
-   
+    <script src="index.js"></script>
     
     <h1 style="text-align: center;">Can't find what you are looking for, just look below!</h1><br>
   <div id="border" style="border: thin solid black ; background-color:rgb(145, 148, 177); cursor:pointer" onclick="toggleDisplay('tornado-tweets-container')">
@@ -243,7 +243,7 @@
   <script>
       var L;
       
-      const key = 'SyFTPxMVt6sFgMEkA2jZ';
+      const key = '<%=mKey%>';
       var map = L.map('map').setView([38.7946, -106.5348], 4);
       const mtLayer = L.maptiler.maptilerLayer({
         apiKey: key,
