@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-
+require("dotenv").config();
+let mKey =process.env.MAP_KEY;
 // MongoDB Atlas Connection
-const MONGO_URI = "mongodb+srv://armonhadjimani:ND_analysis@cluster0.dqx5o.mongodb.net/disaster_tweets?retryWrites=true&w=majority";
+const MONGO_URI = process.env.MDB_URL;
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log("Connected to MongoDB Atlas"))
@@ -26,7 +27,7 @@ const Tweet = mongoose.model("Tweet", tweetSchema);
 router.get('/', async function(req, res, next) {
   try {
     const tweets = await Tweet.find({disaster_type: { $in: ["tornado", "hurricane","earthquake","flood","wildfire","blizzard","haze","meteor"] } }).sort({ timestamp: -1 }).limit(500);
-    res.render('index', { title: 'Bluesky Tweets', tweets });
+    res.render('index', { title: 'Bluesky Tweets', tweets, mKey  });
     
   } catch (error) {
     res.status(500).send("Error fetching tweets.");
