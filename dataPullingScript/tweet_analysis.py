@@ -1,25 +1,24 @@
 from bluesky_fetcher import BlueskyFetcher
-from add_locations import update_post_locations
+from add_locations import update_post_locations_on_list
 from data_manager import DataManager
 from predict_disaster import DisasterPredictor
 
+
 def runscripts():
     predictor = DisasterPredictor()
+
     print("Starting tweet analysis pipeline")
     data_manager = DataManager()
     fetcher = BlueskyFetcher(data_manager)
 
-    print("Fetching and storing new Bluesky posts")
-    fetcher.fetch_posts()
+    print("Fetching posts from Bluesky")
+    posts = fetcher.fetch_posts()
+    print(f"Fetched {len(posts)} posts from Bluesky.")
 
-    print("Updating posts with location information")
-    update_post_locations(data_manager)
+    posts = update_post_locations_on_list(posts)
 
-    print("Updating posts with predicted disaster type")
+    posts = predictor.predict_disasters_on_list(posts)
 
-    predictor.predict_disasters(data_manager)
+    data_manager.add_bluesky_posts(posts)
 
     print("Tweet analysis pipeline complete.")
-
-
-
