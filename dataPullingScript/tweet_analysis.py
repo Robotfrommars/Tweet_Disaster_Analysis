@@ -3,7 +3,8 @@ from add_locations import update_post_locations
 from data_manager import DataManager
 from predict_disaster import DisasterPredictor
 
-def main():
+def runscripts():
+    predictor = DisasterPredictor()
     print("Starting tweet analysis pipeline")
     data_manager = DataManager()
     fetcher = BlueskyFetcher(data_manager)
@@ -13,13 +14,12 @@ def main():
 
     print("Updating posts with location information")
     update_post_locations(data_manager)
-    
+
     print("Updating posts with predicted disaster type")
-    predictor = DisasterPredictor()
+
     predictor.predict_disasters(data_manager)
 
     print("Tweet analysis pipeline complete.")
 
 
-if __name__ == "__main__":
-    main()
+
