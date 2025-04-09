@@ -23,6 +23,7 @@ class BlueskyFetcher:
 
     def login(self):
         try:
+
             self.client.login(config.USERNAME, config.PASSWORD)
             print("Bluesky login successful!")
         except Exception as e:
@@ -70,22 +71,17 @@ class BlueskyFetcher:
 
     def fetch_posts(self):
         self.data_manager.delete_old_posts()
-
+        all_posts = []
         for query in SEARCH_TERMS:
             downloaded_count = 0
             cursor = None
-
             while downloaded_count < MAX_DOWNLOADS:
                 print(f"Searching posts for {query} at index {downloaded_count}")
                 posts, cursor = self.search_bluesky_posts(cursor, query)
-
                 if not posts:
                     break
-
-                self.data_manager.add_bluesky_posts(posts)
+                all_posts.extend(posts)     ##
                 downloaded_count += len(posts)
-
                 if downloaded_count >= MAX_DOWNLOADS or not cursor:
                     break
-
-
+        return all_posts
