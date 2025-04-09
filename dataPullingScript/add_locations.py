@@ -8,14 +8,13 @@ nlp = spacy.load("en_core_web_sm")
 geolocator = Nominatim(user_agent="tweet-disaster-locator")
 location_cache = {}
 
-
-def update_post_locations(db):
-    posts = db.get_all_posts()
-    print('Adding post locations and coordinates')
-
+def update_post_locations_on_list(posts):
+    print('Adding location information to posts')
     for post in posts:
-        add_location(post)
-    db.add_bluesky_posts(posts)
+        add_location(post)  ##
+    return posts
+
+
 
 def add_location(post):
     try:
@@ -54,7 +53,7 @@ def get_coordinates(location_name):
         return location_cache[location_name]
 
     try:
-        time.sleep(1)
+
         location = geolocator.geocode(location_name)
         if location:
             coords = {"lat": location.latitude, "lng": location.longitude}
