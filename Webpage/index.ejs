@@ -6,31 +6,31 @@
      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
-  
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
      <script src="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.umd.min.js"></script>
     <link href="https://cdn.maptiler.com/maptiler-sdk-js/v3.0.1/maptiler-sdk.css" rel="stylesheet" />
     <script src="https://cdn.maptiler.com/leaflet-maptilersdk/v4.0.2/leaflet-maptilersdk.umd.min.js"></script>
-
   </head>
   
   <body style="background-color:rgb(209, 212, 248);" >
-
+ 
     <h1 style="text-align: center;">Welcome to Natural Disaster Warnings With Bluesky</h1>
     <div id="map" style="border: thin solid black ;"> </div><br>
-    <script src="index.js"></script>
     
+    <label id="demo"></label>
+    <canvas id="myChart"></canvas>
     <h1 style="text-align: center;">Can't find what you are looking for, just look below!</h1><br>
   <div id="border" style="border: thin solid black ; background-color:rgb(145, 148, 177); cursor:pointer" onclick="toggleDisplay('tornado-tweets-container')">
     <h1 style="text-align: center;user-select: none;" >Tornados</h1>
     <div id="tornado-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('tornado-tweets-container')">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
-              <% if (tweet.query == "tornado"){ %>
+              <% if (tweet.disaster_type == "tornado"){ %>
               <div class="tweet">
-                  <strong><%= tweet.query %></strong><br>
+                  <strong><%= tweet.disaster_type %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
                   <% if (tweet.latitude != null){ %>
@@ -39,7 +39,7 @@
                     <br>
                     <%var temp=tweet.text%>
                     <%temp=temp.replace(/[^a-zA-Z0-9\s]/g, '')%>
-                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.disaster_type %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
                       Add Marker
                     </button>
                    
@@ -59,9 +59,9 @@
     <div id="hurricane-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('hurricane-tweets-container')">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
-              <% if (tweet.query == "hurricane"){ %>
+              <% if (tweet.disaster_type == "hurricane"){ %>
               <div class="tweet">
-                  <strong><%= tweet.query %></strong><br>
+                  <strong><%= tweet.disaster_type %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
                   <% if (tweet.latitude != null){ %>
@@ -69,7 +69,7 @@
                     <br><small>Longitude: <%= tweet.longitude  %></small>
                     <%var temp=tweet.text%>
                     <%temp=temp.replace(/[^a-zA-Z0-9\s]/g, '')%>
-                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.disaster_type %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
                       Add Marker
                     </button>
                   <%}%>
@@ -88,15 +88,15 @@
   <div id="earthquake-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('earthquake-tweets-container')">
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
-            <% if (tweet.query == "earthquake"){ %>
+            <% if (tweet.disaster_type == "earthquake"){ %>
             <div class="tweet">
-                <strong><%= tweet.query %></strong><br>
+                <strong><%= tweet.disaster_type %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
                 <% if (tweet.latitude != null){ %>
                     <br><small>Latitude: <%= tweet.latitude %></small>
                     <br><small>Longitude: <%= tweet.longitude  %></small><br>
-                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.disaster_type %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
                       Add Marker
                     </button>
                   <%}%>
@@ -115,15 +115,15 @@
     <div id="flood-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('flood-tweets-container')">
       <% if (tweets.length > 0) { %>
           <% tweets.forEach(tweet => { %>
-              <% if (tweet.query == "flood"){ %>
+              <% if (tweet.disaster_type == "flood"){ %>
               <div class="tweet">
-                  <strong><%= tweet.query %></strong><br>
+                  <strong><%= tweet.disaster_type %></strong><br>
                   <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                   <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
                   <% if (tweet.latitude != null){ %>
                     <br><small>Latitude: <%= tweet.latitude %></small>
                     <br><small>Longitude: <%= tweet.longitude  %></small><br>
-                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.disaster_type %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
                       Add Marker
                     </button>
                   <%}%>
@@ -141,15 +141,15 @@
   <div id="wildfire-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('wildfire-tweets-container')">
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
-            <% if (tweet.query == "wildfire"){ %>
+            <% if (tweet.disaster_type == "wildfire"){ %>
             <div class="tweet">
-                <strong><%= tweet.query %></strong><br>
+                <strong><%= tweet.disaster_type %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
                 <% if (tweet.latitude != null){ %>
                     <br><small>Latitude: <%= tweet.latitude %></small>
                     <br><small>Longitude: <%= tweet.longitude  %></small>
-                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.disaster_type %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
                       Add Marker
                     </button>
                   <%}%>
@@ -167,15 +167,15 @@
   <div id="blizzard-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('blizzard-tweets-container')">
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
-            <% if (tweet.query == "blizzard"){ %>
+            <% if (tweet.disaster_type == "blizzard"){ %>
             <div class="tweet">
-                <strong><%= tweet.query %></strong><br>
+                <strong><%= tweet.disaster_type %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
                 <% if (tweet.latitude != null){ %>
                     <br><small>Latitude: <%= tweet.latitude %></small>
                     <br><small>Longitude: <%= tweet.longitude  %></small><br>
-                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.disaster_type %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
                       Add Marker
                     </button>
                   <%}%>
@@ -192,15 +192,15 @@
   <div id="haze-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('haze-tweets-container')"> 
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
-            <% if (tweet.query == "haze"){ %>
+            <% if (tweet.disaster_type == "haze"){ %>
             <div class="tweet">
-                <strong><%= tweet.query %></strong><br>
+                <strong><%= tweet.disaster_type %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
                 <% if (tweet.latitude != null){ %>
                     <br><small>Latitude: <%= tweet.latitude %></small>
                     <br><small>Longitude: <%= tweet.longitude  %></small><br>
-                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.disaster_type %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
                       Add Marker
                     </button>
                   <%}%>
@@ -212,20 +212,20 @@
     <% } %>
 </div>
 </div>
-<div id="border" style="border: thin solid black ; background-color:rgb(221, 190, 241); cursor:pointer" onclick="toggleDisplay('meteor-tweets-container')">
+<div id="border" style="border: thin solid black ; background-color:rgb(162, 104, 201); cursor:pointer" onclick="toggleDisplay('meteor-tweets-container')">
   <h1 style="text-align: center ;user-select: none;" >Meteor</h1>
   <div id="meteor-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('meteor-tweets-container')">
     <% if (tweets.length > 0) { %>
         <% tweets.forEach(tweet => { %>
-            <% if (tweet.query == "meteor"){ %>
+            <% if (tweet.disaster_type == "meteor"){ %>
             <div class="tweet">
-                <strong><%= tweet.query %></strong><br>
+                <strong><%= tweet.disaster_type %></strong><br>
                 <strong>@<%= tweet.user %></strong>: <%= tweet.text %>
                 <br><small><%= new Date(tweet.timestamp).toLocaleString() %></small>
                 <% if (tweet.latitude != null){ %>
                     <br><small>Latitude: <%= tweet.latitude %></small>
                     <br><small>Longitude: <%= tweet.longitude  %></small><br>
-                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.query %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
+                    <button onclick="addToMap('<%= tweet.latitude %>', '<%= tweet.longitude %>','<%= tweet.disaster_type %>', '<%= new Date(tweet.timestamp).toLocaleString() %>')">
                       Add Marker
                     </button>
                     
@@ -241,8 +241,16 @@
   </body>
 
   <script>
-      var L;
       
+      const url = 'http://localhost:3000/hello2'
+    fetch(url)
+    .then(response => response.json())  
+    .then(json => {
+        console.log(json);
+        document.getElementById("demo").innerHTML = JSON.stringify(json)
+    })
+
+    var L;
       const key = '<%=mKey%>';
       var map = L.map('map').setView([38.7946, -106.5348], 4);
       const mtLayer = L.maptiler.maptilerLayer({
@@ -276,5 +284,47 @@
           });
       }
   });
+  const labels = ["Tornados","Hurricanes","Earthquakes","Floods","Wildfires","Blizzards","Haze","Meteors"]
+  const ctx = document.getElementById('myChart');
+  const data = {
+  labels: labels,
+  datasets: [{
+    label: 'Disaster Count by type',
+    data: ['<%=barData[0]%>','<%=barData[1]%>','<%=barData[2]%>','<%=barData[3]%>','<%=barData[4]%>','<%=barData[5]%>','<%=barData[6]%>','<%=barData[7]%>'],
+    backgroundColor: [
+      'rgba(145, 148, 177, 0.8)',
+      'rgba(151, 158, 218, 0.5)',
+      'rgba(129, 119, 119, 0.5)',
+      'rgba(120, 133, 248, 0.5)',
+      'rgba(226, 178, 87, 0.5)',
+      'rgba(156, 205, 228, 0.8)',
+      'rgba(229, 230, 183, 0.8)',
+      'rgba(162, 104, 201, 0.8)'
+    ],
+    borderColor: [
+      'rgb(145, 148, 177)',
+      'rgb(151, 158, 218)',
+      'rgb(129, 119, 119)',
+      'rgb(120, 133, 248)',
+      'rgb(226, 178, 87)',
+      'rgb(156, 205, 228)',
+      'rgb(229, 230, 183',
+      'rgb(162, 104, 201)'
+    ],
+    borderWidth: 1
+  }]
+};
+const config = {
+  type: 'bar',
+  data: data,
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  },
+};
+ctx = new Chart(ctx,config);
   </script>
 </html>
