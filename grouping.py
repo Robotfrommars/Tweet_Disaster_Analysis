@@ -2,17 +2,17 @@ import pandas as pd
 from collections import Counter
 import re
 
-# Load the dataset
+# Load dataset
 file_path = "tweet_data_clean (1).csv"  # Make sure the file is in the same directory or adjust the path
 df = pd.read_csv(file_path)
 
-# Column to analyze
+# analyze column
 TEXT_COLUMN = 'tweet_text'
 
-# Keywords to search for (case-insensitive)
+# Keywords
 keywords = ["earthquake", "typhoon", "wildfire", "tsunami", "not disaster"]
 
-# Tokenization function
+# Tokenize
 def tokenize(text):
     return re.findall(r'\b\w+\b', text.lower())
 
@@ -40,7 +40,7 @@ import pandas as pd
 from collections import Counter
 import re
 
-# Load the dataset
+# Load dataset
 file_path = "tweet_data_clean (1).csv"  # Make sure the file is in the same directory or adjust the path
 df = pd.read_csv(file_path)
 
