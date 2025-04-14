@@ -329,8 +329,10 @@ ctx = new Chart(ctx,config);
     function addMarkers(dtype){
       '<% if (tweets.length > 0) { %>'
         '<% tweets.forEach(tweet => { %>'
-             if ('<%=tweet.disaster_type%>' == dtype && '<%=tweet.latitude%>'!=null){ 
-                    addToMap('<%= tweet.latitude %>','<%= tweet.longitude  %>','<%=tweet.disaster_type%>','<%=tweet.timestamp%>');   
+             if ('<%=tweet.disaster_type%>' == dtype){ 
+              '<% if (tweet.latitude != null){ %>'
+                    addToMap('<%= tweet.latitude %>','<%= tweet.longitude  %>','<%=tweet.disaster_type%>','<%=tweet.timestamp%>');  
+              '<% } %>'       
             }
         '<% }); %>'
     '<% } %>'
