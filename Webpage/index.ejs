@@ -242,14 +242,13 @@
 
   <script>
       
-      const url = 'http://localhost:3000/hello2'
+      const url = 'http://127.0.0.1:5000/hello2'
     fetch(url)
     .then(response => response.json())  
     .then(json => {
         console.log(json);
         document.getElementById("demo").innerHTML = JSON.stringify(json)
     })
-
     var L;
       const key = '<%=mKey%>';
       var map = L.map('map').setView([38.7946, -106.5348], 4);
@@ -260,10 +259,9 @@
         worldCopyJump: true,
       }).addTo(map);
 
-      
-      window.addToMap= function(lat,long,type,msg)
+
+      function addToMap(lat,long,type,msg)
       {
-        
         var marker = L.marker([lat, long]).addTo(map);
          msg=escapeTweetText(msg);
         marker.bindPopup(`<strong>${type}</strong><br>${msg}`);
@@ -285,7 +283,7 @@
       }
   });
   const labels = ["Tornados","Hurricanes","Earthquakes","Floods","Wildfires","Blizzards","Haze","Meteors"]
-  const ctx = document.getElementById('myChart');
+  let ctx = document.getElementById('myChart');
   const data = {
   labels: labels,
   datasets: [{
@@ -326,5 +324,29 @@ const config = {
   },
 };
 ctx = new Chart(ctx,config);
+
+
+    function addMarkers(dtype){
+      '<% if (tweets.length > 0) { %>'
+        '<% tweets.forEach(tweet => { %>'
+             if ('<%=tweet.disaster_type%>' == dtype && '<%=tweet.latitude%>'!=null){ 
+                    addToMap('<%= tweet.latitude %>','<%= tweet.longitude  %>','<%=tweet.disaster_type%>','<%=tweet.timestamp%>');   
+            }
+        '<% }); %>'
+    '<% } %>'
+    }
+   
+    addMarkers("tornado");
+    addMarkers("hurricane");
+    addMarkers("blizzard");
+    addMarkers("wildfire");
+    addMarkers("flood");
+    addMarkers("earthquake");
+    addMarkers("haze");
+    addMarkers("meteor");
+
+
+
+        
   </script>
 </html>
