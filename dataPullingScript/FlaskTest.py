@@ -50,7 +50,7 @@ class DataManager:
         return self.collection.find_one({"user": post.user, "text": post.text}) is not None
 
     def delete_old_posts(self):
-        cutoff_date = datetime.now(timezone.utc) - timedelta(days=5)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=14)
         result = self.collection.delete_many({"createdAt": {"$lt": cutoff_date}})
         print(f"Deleted {result.deleted_count} old posts from MongoDB.")
 
