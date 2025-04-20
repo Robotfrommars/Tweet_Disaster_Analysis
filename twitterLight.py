@@ -51,7 +51,7 @@ params = {
     'random_state': 5
 }
 
-#This creates the training ml mmodel stopinh after 10 rounds to save time
+#This creates the the model using the light gbm model
 model = lgb.train(
     params,
     train_data,
@@ -60,11 +60,13 @@ model = lgb.train(
     callbacks=[lgb.early_stopping(stopping_rounds=10), lgb.log_evaluation(-1)]
 )
 
-#This section is what creates the modeland sets itup displaying thre cacurate rate and deploying the report on how the results averaged.
+#This section is what creates the model and sets it up displaying thre cacurate rate and deploying the report on how the results averaged.
 y_pred = model.predict(X_test)
 y_pred_classes = y_pred.argmax(axis=1)
 y_pred_labels = label_encoder.inverse_transform(y_pred_classes)
 y_test_labels = label_encoder.inverse_transform(y_test)
+
+#print out the accuracy of the model as well as the classification report for it
 accuracy = accuracy_score(y_test_labels, y_pred_labels)
 print(f"Accuracy: {accuracy:.2f}")
 print("\nClassification Report:")
