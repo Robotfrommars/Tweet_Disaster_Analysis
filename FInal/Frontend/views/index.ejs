@@ -5,6 +5,7 @@
   <title>
     <%= title %>
   </title>
+<!--Any sources used is displayed here--> 
   <link rel='stylesheet' href='/stylesheets/style.css' />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -24,20 +25,21 @@
 
   <div id="map" style="border: thin solid black;"></div><br>
 
-  <label id="demo"style=></label>
-  <div id="help" style="float:left ;width: 49%; height: 400px;text-align:center">
+ <!--Graphs seen below--> 
+  <div id="bar" style="float:left ;width: 49%; height: 400px;text-align:center">
   <canvas id="myChart" width="49%"  ></canvas>
 </div>
-<div id="helpME" style="float:right ;width: 49%; height: 400px;text-align:center">
+<div id="line" style="float:right ;width: 49%; height: 400px;text-align:center">
   <canvas id="lineChart"width="49%"></canvas>
 </div>
-
+<!--Start of Tweets--> 
   <h1 style="text-align: center;">Can't find what you are looking for, just look below!</h1><br>
   <div id="border" style="border: thin solid black ; background-color:rgb(145, 148, 177); cursor:pointer"
     onclick="toggleDisplay('tornado-tweets-container')">
     <h1 style="text-align: center;user-select: none;">Tornados</h1>
     <div id="tornado-tweets-container" style="display: none; cursor:auto"
       onclick="toggleDisplay('tornado-tweets-container')">
+<!--Print all pulled tornados, this is the most recent ones--> 
       <% if (tweets.length> 0) { %>
         <% tweets.forEach(tweet=> { %>
           <% if (tweet.disaster_type=="tornado" ){ %>
@@ -73,6 +75,7 @@
     <h1 style="text-align: center; user-select: none;">Hurricanes</h1>
     <div id="hurricane-tweets-container" style="display: none; cursor:auto"
       onclick="toggleDisplay('hurricane-tweets-container')">
+<!--Print all pulled hurricanes, this is the most recent ones--> 
       <% if (tweets.length> 0) { %>
         <% tweets.forEach(tweet=> { %>
           <% if (tweet.disaster_type=="hurricane" ){ %>
@@ -100,12 +103,13 @@
     </div>
   </div>
 
-
+<!--Start of earthquakes--> 
   <div id="border" style="border: thin solid black ; background-color:rgb(129, 119, 119);cursor:pointer"
     onclick="toggleDisplay('earthquake-tweets-container')">
     <h1 style="text-align: center;user-select: none; ">Earthquakes</h1>
     <div id="earthquake-tweets-container" style="display: none; cursor:auto"
       onclick="toggleDisplay('earthquake-tweets-container')">
+<!--Print all pulled earthquakes, this is the most recent ones--> 
       <% if (tweets.length> 0) { %>
         <% tweets.forEach(tweet=> { %>
           <% if (tweet.disaster_type=="earthquake" ){ %>
@@ -137,6 +141,7 @@
     <h1 style="text-align: center ;user-select: none;">Floods</h1>
     <div id="flood-tweets-container" style="display: none; cursor:auto"
       onclick="toggleDisplay('flood-tweets-container')">
+<!--Print all pulled flood, this is the most recent ones--> 
       <% if (tweets.length> 0) { %>
         <% tweets.forEach(tweet=> { %>
           <% if (tweet.disaster_type=="flood" ){ %>
@@ -197,6 +202,7 @@
     <h1 style="text-align: center ;user-select: none;">Blizzard</h1>
     <div id="blizzard-tweets-container" style="display: none; cursor:auto"
       onclick="toggleDisplay('blizzard-tweets-container')">
+<!--Print all pulled blizzards, this is the most recent ones--> 
       <% if (tweets.length> 0) { %>
         <% tweets.forEach(tweet=> { %>
           <% if (tweet.disaster_type=="blizzard" ){ %>
@@ -225,6 +231,7 @@
     onclick="toggleDisplay('haze-tweets-container')">
     <h1 style="text-align: center ;user-select: none;">Haze</h1>
     <div id="haze-tweets-container" style="display: none; cursor:auto" onclick="toggleDisplay('haze-tweets-container')">
+<!--Print all pulled hazes, this is the most recent ones--> 
       <% if (tweets.length> 0) { %>
         <% tweets.forEach(tweet=> { %>
           <% if (tweet.disaster_type=="haze" ){ %>
@@ -254,6 +261,7 @@
     <h1 style="text-align: center ;user-select: none;">Meteor</h1>
     <div id="meteor-tweets-container" style="display: none; cursor:auto"
       onclick="toggleDisplay('meteor-tweets-container')">
+<!--Print all pulled meteors, this is the most recent ones--> 
       <% if (tweets.length> 0) { %>
         <% tweets.forEach(tweet=> { %>
           <% if (tweet.disaster_type=="meteor" ){ %>
@@ -282,7 +290,7 @@
 </body>
 
 <script>
-
+//call api
   const url = '<%=urlKey%>'
   fetch(url)
     .then(response => response.json())
@@ -292,6 +300,7 @@
     })
   var L;
   const key = '<%=mKey%>';
+//create the interactive map
   var map = L.map('map').setView([38.7946, -106.5348], 4);
   const mtLayer = L.maptiler.maptilerLayer({
     apiKey: key,
@@ -300,28 +309,24 @@
     worldCopyJump: true,
   }).addTo(map);
 
-
+//add markers to map called later for each marker
   function addToMap(lat, long, type, msg) {
     var marker = L.marker([lat, long]).addTo(map);
     msg = escapeTweetText(msg);
     marker.bindPopup(`<strong>${type}</strong><br>${msg}`);
 
   }
+//toggles the diplay of text divisions
   function toggleDisplay(type) {
     let container = document.getElementById(type);
     container.style.display = container.style.display === "none" ? "block" : "none";
   }
+ //ensures no problems with adding markers
   function escapeTweetText(text) {
     return text.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    if (window.tweetMarkers && Array.isArray(window.tweetMarkers)) {
-      window.tweetMarkers.forEach(marker => {
-        addToMap(marker.lat, marker.long, marker.type, marker.msg);
-      });
-    }
-  });
+//graph data
   const labels = ["Tornados", "Hurricanes", "Earthquakes", "Floods", "Wildfires", "Blizzards", "Haze", "Meteors"]
   let ctx = document.getElementById('myChart');
   const data = {
@@ -599,7 +604,7 @@
 
 
 
-
+//adds all the markers for the text given (the most recent 500)
   function addMarkers(dtype) {
     '<% if (tweets.length > 0) { %>'
     '<% tweets.forEach(tweet => { %>'
@@ -611,7 +616,7 @@
     '<% }); %>'
     '<% } %>'
   }
-
+//add by type
   addMarkers("tornado");
   addMarkers("hurricane");
   addMarkers("blizzard");
