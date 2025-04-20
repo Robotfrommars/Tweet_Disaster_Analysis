@@ -31,7 +31,9 @@ const Tweet = mongoose.model("Tweet", tweetSchema);
 // GET home page & Fetch Tweets
 router.get('/', async function (req, res, next) {
   try {
+    //pull most recent 500 tweets from mongodb to be displayed
     const tweets = await Tweet.find({ disaster_type: { $in: ["tornado", "hurricane", "earthquake", "flood", "wildfire", "blizzard", "haze", "meteor"] } }).sort({ timestamp: -1 }).limit(500);
+    //used by bar graph
     let tCount = await Tweet.find({ disaster_type: { $in: ["tornado"] } }).countDocuments();
     let hCount = await Tweet.find({ disaster_type: { $in: ["hurricane"] } }).countDocuments();
     let eCount = await Tweet.find({ disaster_type: { $in: ["earthquake"] } }).countDocuments();
@@ -96,7 +98,7 @@ router.get('/', async function (req, res, next) {
         disasterLineData[type][dayIndex] = count;
       }
     });
-
+//send to ejs file
     res.render('index', { title: 'Bluesky Tweets', tweets, mKey, barData, lineLabels, disasterLineData,urlKey });
 
   } catch (error) {
