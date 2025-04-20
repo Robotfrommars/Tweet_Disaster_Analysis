@@ -32,7 +32,7 @@ const Tweet = mongoose.model("Tweet", tweetSchema);
 router.get('/', async function (req, res, next) {
   try {
     //pull most recent 500 tweets from mongodb to be displayed
-    const tweets = await Tweet.find({ disaster_type: { $in: ["tornado", "hurricane", "earthquake", "flood", "wildfire", "blizzard", "haze", "meteor"] } }).sort({ timestamp: -1 }).limit(500);
+    const tweets = await Tweet.find({ disaster_type: { $in: ["tornado", "hurricane", "earthquake", "flood", "wildfire", "blizzard", "haze", "meteor"] } }).sort({ timestamp: -1 }).limit(2000);
     //used by bar graph
     let tCount = await Tweet.find({ disaster_type: { $in: ["tornado"] } }).countDocuments();
     let hCount = await Tweet.find({ disaster_type: { $in: ["hurricane"] } }).countDocuments();
